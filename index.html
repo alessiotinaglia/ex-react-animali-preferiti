@@ -10,10 +10,22 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-    const animals = ["Gatto", "Cane", "Pappagallo", "Riccio", "Coniglio"];
+
+    const { useState } = React;
 
     function AnimalList() {
-      return (
+
+      const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
+
+      const [animals, setAnimals] = useState([]);
+
+      const addAnimal = () => {
+        const animaleCasuale = animalsChoices[Math.floor(Math.random() * animalsChoices.length)];
+        setAnimals(prev => [...prev, animaleCasuale]);
+      }
+
+      return (<>
+        <button onClick={addAnimal}>Aggiungi animale casuale</button>
         <details>
           <summary>Animali</summary>
           <ul>
@@ -22,6 +34,7 @@
             ))}
           </ul>
         </details>
+      </>
       );
     }
 
