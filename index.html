@@ -13,19 +13,46 @@
 
     const { useState } = React;
 
+    function Modal({
+      title,
+      content,
+      show = false,
+      onClose = () => { },
+      onConfirm = () => { }
+    }) {
+      return show && ReactDOM.createPortal(
+        <div className="modal-container">
+          <div className="modal">
+            <h2>{title}</h2>
+            <p>{content}</p>
+            <div>
+              <button onClick={onClose}>Annulla</button>
+              <button onClick={onConfirm}>Conferma</button>
+            </div>
+
+          </div>
+        </div>,
+        document.body
+      )
+    }
+
     function AnimalList() {
 
       const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
 
       const [animals, setAnimals] = useState([]);
+      const [show, setShow] = useState(false);
+      const [animalName, setanimalName] = useState("");
 
       const addAnimal = () => {
-        const animaleCasuale = animalsChoices[Math.floor(Math.random() * animalsChoices.length)];
-        setAnimals(prev => [...prev, animaleCasuale]);
+        if (!animalName) return;
+        setAnimals(curr => [...curr, animalName])
+        setanimalName('');
+        setShow(false);
       }
 
       return (<>
-        <button onClick={addAnimal}>Aggiungi animale casuale</button>
+        <button onClick={() => setShow(true)}>Aggiungi animale casuale</button>
         <details>
           <summary>Animali</summary>
           <ul>
@@ -34,6 +61,19 @@
             ))}
           </ul>
         </details>
+        <Modal
+          show={show}
+          onClose={() => setShow(false)}
+          onConfirm={addAnimal}
+          title="Aggiungi animale"
+          content={
+            <input
+              type="text"
+              value={animalName}
+              onChange={e => setanimalName(e.target.value)}
+            />
+          }
+        />
       </>
       );
     }
